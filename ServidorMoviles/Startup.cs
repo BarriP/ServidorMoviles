@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ServidorMoviles.Models;
 using ServidorMoviles.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -25,10 +27,13 @@ namespace ServidorMoviles
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DataContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("db")));
+
             services.AddMvc();
 
             // Services
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserRepository, UserService>();
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

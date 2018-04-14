@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ServidorMoviles.Services
 {
-    interface IUserService
+    interface IUserRepository
     {
     }
 }
