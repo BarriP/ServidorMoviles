@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="wwwroot\DB\" />
+    <Folder Include="Models\Form\" />
   </ItemGroup>
 
 </Project>

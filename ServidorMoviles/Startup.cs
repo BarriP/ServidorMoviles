@@ -27,13 +27,14 @@ namespace ServidorMoviles
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("db")));
 
             services.AddMvc();
 
             // Services
-            services.AddTransient<IUserRepository, UserService>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

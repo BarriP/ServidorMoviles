@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace ServidorMoviles.Models
 {
-    public partial class Users
+    public partial class Usuario
     {
-        public Users()
+        public Usuario()
         {
-            Comments = new HashSet<Comments>();
+            Comentario = new HashSet<Comentario>();
         }
 
         public long Id { get; set; }
@@ -17,6 +17,6 @@ namespace ServidorMoviles.Models
         public string Mail { get; set; }
         public string ImageUrl { get; set; }
 
-        public ICollection<Comments> Comments { get; set; }
+        public ICollection<Comentario> Comentario { get; set; }
     }
 }

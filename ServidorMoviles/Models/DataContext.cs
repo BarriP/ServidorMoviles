@@ -4,29 +4,24 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ServidorMoviles.Models
 {
-    /**
-     * Modelo generado automaticamente gracias al EF de Microsoft
-     * Scaffold-DbContext "DataSource=J:\Visual Studio Workspace\ServidorMoviles\ServidorMoviles\wwwroot\DB\data.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir Models
-     */
     public partial class DataContext : DbContext
     {
-        public virtual DbSet<Bares> Bares { get; set; }
-        public virtual DbSet<Comments> Comments { get; set; }
-        public virtual DbSet<Ruta> Ruta { get; set; }
-        public virtual DbSet<Tapas> Tapas { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
-
-        public DataContext(DbContextOptions options) : base(options) { }
+        public virtual DbSet<Bar> Bares { get; set; }
+        public virtual DbSet<Comentario> Comentarios { get; set; }
+        public virtual DbSet<Ruta> Rutas { get; set; }
+        public virtual DbSet<Tapa> Tapas { get; set; }
+        public virtual DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Bares>(entity =>
+            modelBuilder.Entity<Bar>(entity =>
             {
                 entity.HasIndex(e => e.Id)
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Address).HasColumnName("address");
 
@@ -53,13 +48,14 @@ namespace ServidorMoviles.Models
                     .HasColumnName("type");
             });
 
-            modelBuilder.Entity<Comments>(entity =>
+            modelBuilder.Entity<Comentario>(entity =>
             {
                 entity.HasIndex(e => e.Id)
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Comment).HasColumnName("comment");
 
@@ -72,7 +68,7 @@ namespace ServidorMoviles.Models
                 entity.Property(e => e.UserId).HasColumnName("userId");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.Comments)
+                    .WithMany(p => p.Comentario)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
@@ -83,20 +79,22 @@ namespace ServidorMoviles.Models
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
 
-            modelBuilder.Entity<Tapas>(entity =>
+            modelBuilder.Entity<Tapa>(entity =>
             {
                 entity.HasIndex(e => e.Id)
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Category).HasColumnName("category");
 
@@ -117,7 +115,7 @@ namespace ServidorMoviles.Models
                     .HasColumnName("type");
             });
 
-            modelBuilder.Entity<Users>(entity =>
+            modelBuilder.Entity<Usuario>(entity =>
             {
                 entity.HasIndex(e => e.Id)
                     .IsUnique();
@@ -126,7 +124,8 @@ namespace ServidorMoviles.Models
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.ImageUrl).HasColumnName("imageUrl");
 

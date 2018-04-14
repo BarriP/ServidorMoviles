@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ServidorMoviles.Models
 {
-    public partial class Comments
+    public partial class Comentario
     {
         public long Id { get; set; }
         public string Comment { get; set; }
@@ -12,6 +12,6 @@ namespace ServidorMoviles.Models
         public long CommentType { get; set; }
         public long? CommentTargetId { get; set; }
 
-        public Users User { get; set; }
+        public Usuario User { get; set; }
     }
 }

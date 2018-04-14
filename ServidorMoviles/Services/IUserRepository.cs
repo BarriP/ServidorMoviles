@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ServidorMoviles.Models;
 
 namespace ServidorMoviles.Services
 {
-    interface IUserRepository
+    public interface IUserRepository
     {
+        IEnumerable<Usuario> GetUsuarios();
     }
 }
