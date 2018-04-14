@@ -12,7 +12,20 @@ namespace ServidorMoviles.Services
         public UserRepository(DataContext ctx) => _context = ctx;
 
         public IEnumerable<Usuario> GetUsuarios() => _context.Usuario.ToList();
-        public Usuario GetUsuario(int id) => _context.Usuario.FirstOrDefault(u => u.Id == id);
+        public Usuario GetUsuario(int id) => _context.Usuario.FirstOrDefault(
+            u => u.Id == id);
+        public Usuario GetUsuario(string username, string password) => _context.Usuario.FirstOrDefault(
+            u => u.Username.Equals(username) && 
+                 u.Password.Equals(password));
+        public bool DeleteUser(int userId)
+        {
+            var user = GetUsuario(userId);
+            if (user == null)
+                return false;
+            _context.Usuario.Remove(user);
+            return true;
+        }
+        public void Save() => _context.SaveChanges();
 
         #region Dispose
         private bool _disposed = false;

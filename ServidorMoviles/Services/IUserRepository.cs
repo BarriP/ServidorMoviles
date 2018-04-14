@@ -10,5 +10,8 @@ namespace ServidorMoviles.Services
     {
         IEnumerable<Usuario> GetUsuarios();
         Usuario GetUsuario(int id);
+        Usuario GetUsuario(string username, string password);
+        bool DeleteUser(int userId);
+        void Save();
     }
 }

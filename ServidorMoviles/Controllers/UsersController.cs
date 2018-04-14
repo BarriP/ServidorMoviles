@@ -32,25 +32,48 @@ namespace ServidorMoviles.Controllers
             if (user != null)
                 return Ok(user);
             else
-                return NotFound(new { Msg = $"Usuario con id[{id}] no encontrado" });
+                return NotFound(new {Msg = $"Usuario con id[{id}] no encontrado"});
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody] string value)
         {
+            //todo
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody] string value)
         {
+            //TODO
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public IActionResult Delete(int id)
         {
+            if (_userRepository.DeleteUser(id))
+            {
+                _userRepository.Save();
+                return Ok(new {Msg = $"Usuario [{id}] borrado"});
+            }
+            else
+                return NotFound(new {Msg = $"Usuario [{id}] no se ha encontrado"});
+        }
+
+        [HttpPost("login")]
+        [ProducesResponseType(typeof(Usuario), 200)]
+        [ProducesResponseType(typeof(Usuario), 404)]
+        public IActionResult Login(string username, string password)
+        {
+            var user = _userRepository.GetUsuario(username, password);
+            if (user != null)
+                return Ok(user);
+            else
+                return NotFound(new {Msg = $"Usuario con username[{username}] no encontrado"});
         }
     }
 }
