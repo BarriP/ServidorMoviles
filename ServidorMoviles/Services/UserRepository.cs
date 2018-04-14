@@ -11,10 +11,7 @@ namespace ServidorMoviles.Services
         private readonly DataContext _context;
         public UserRepository(DataContext ctx) => _context = ctx;
 
-        public IEnumerable<Usuario> GetUsuarios()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<Usuario> GetUsuarios() => _context.Usuario.ToList();
 
         #region Dispose
         private bool _disposed = false;

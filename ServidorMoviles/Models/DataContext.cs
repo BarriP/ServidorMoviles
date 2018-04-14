@@ -6,11 +6,13 @@ namespace ServidorMoviles.Models
 {
     public partial class DataContext : DbContext
     {
-        public virtual DbSet<Bar> Bares { get; set; }
-        public virtual DbSet<Comentario> Comentarios { get; set; }
-        public virtual DbSet<Ruta> Rutas { get; set; }
-        public virtual DbSet<Tapa> Tapas { get; set; }
-        public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<Bar> Bar { get; set; }
+        public virtual DbSet<Comentario> Comentario { get; set; }
+        public virtual DbSet<Ruta> Ruta { get; set; }
+        public virtual DbSet<Tapa> Tapa { get; set; }
+        public virtual DbSet<Usuario> Usuario { get; set; }
+
+        public DataContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

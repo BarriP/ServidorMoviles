@@ -3,18 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ServidorMoviles.Models;
+using ServidorMoviles.Services;
 
 namespace ServidorMoviles.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
-        // GET api/values
+        private readonly IUserRepository _userRepository;
+
+        public UsersController(IUserRepository repo) => _userRepository = repo;
+
+        // GET api/Users
+        [ProducesResponseType(typeof(Usuario), 200)]
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        public IActionResult Get() => Ok(_userRepository.GetUsuarios());
 
         // GET api/values/5
         [HttpGet("{id}")]
