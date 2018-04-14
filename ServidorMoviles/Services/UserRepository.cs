@@ -12,6 +12,7 @@ namespace ServidorMoviles.Services
         public UserRepository(DataContext ctx) => _context = ctx;
 
         public IEnumerable<Usuario> GetUsuarios() => _context.Usuario.ToList();
+        public Usuario GetUsuario(int id) => _context.Usuario.FirstOrDefault(u => u.Id == id);
 
         #region Dispose
         private bool _disposed = false;

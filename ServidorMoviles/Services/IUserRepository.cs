@@ -9,5 +9,6 @@ namespace ServidorMoviles.Services
     public interface IUserRepository
     {
         IEnumerable<Usuario> GetUsuarios();
+        Usuario GetUsuario(int id);
     }
 }

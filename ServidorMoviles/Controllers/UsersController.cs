@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using ServidorMoviles.Models;
 using ServidorMoviles.Services;
 
@@ -17,15 +18,21 @@ namespace ServidorMoviles.Controllers
         public UsersController(IUserRepository repo) => _userRepository = repo;
 
         // GET api/Users
-        [ProducesResponseType(typeof(Usuario), 200)]
-        [HttpGet]
-        public IActionResult Get() => Ok(_userRepository.GetUsuarios());
+        [ProducesResponseType(typeof(IEnumerable<Usuario>), 200)]
+        [HttpGet("")]
+        public IActionResult GetAllUsers() => Ok(_userRepository.GetUsuarios());
 
-        // GET api/values/5
+        // GET api/Users/5
+        [ProducesResponseType(typeof(Usuario), 200)]
+        [ProducesResponseType(typeof(Usuario), 404)]
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult GetUser(int id)
         {
-            return "value";
+            var user = _userRepository.GetUsuario(id);
+            if (user != null)
+                return Ok(user);
+            else
+                return NotFound(new { Msg = $"Usuario con id[{id}] no encontrado" });
         }
 
         // POST api/values
