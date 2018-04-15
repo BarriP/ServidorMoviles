@@ -176,12 +176,11 @@ namespace ServidorMoviles.Controllers
             return fileRoute;
         }
 
-        ///<seealso cref="https://www.brainyquote.com/quotes/edsger_dijkstra_204329"/> 
         private string DetermineExtension(IEnumerable<int> array)
         {
-            var listtest = array.ToArray();
             //Esto con OOP es una gochada
-            var list = ListModule.OfSeq(listtest);
+            //Para esto se crearon los lenguajes funcionales
+            var list = ListModule.OfSeq(array);
             return Magic.ImageUtils.checkMagicNumbers(list);
         }
     }
