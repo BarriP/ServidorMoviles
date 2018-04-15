@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ServidorMoviles.Models;
+using ServidorMoviles.Models.Form;
 using ServidorMoviles.Services;
 
 namespace ServidorMoviles.Controllers
@@ -35,21 +36,39 @@ namespace ServidorMoviles.Controllers
                 return NotFound(new {Msg = $"Usuario con id[{id}] no encontrado"});
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
+        // POST api/Users
+        [HttpPost("")]
+        [ProducesResponseType(typeof(Usuario), 201)]
+        [ProducesResponseType(typeof(Usuario), 400)]
+        public IActionResult NewUser([FromBody] UsuarioCreate newUser)
         {
-            //todo
+            if (!ModelState.IsValid)
+                return BadRequest(new { ErrorMsg = "No se ha proporcionado un usuario valido" });
+
+            var userData = new Usuario
+            {
+                Username = newUser.Username,
+                Password = newUser.Password,
+                Mail = newUser.Mail,
+                Name = newUser.Name
+            };
+
+            var result = _userRepository.NewUsuario(userData);
+
+            if (result == null)
+                return BadRequest(new {ErrorMsg = "No se ha proporcionado un usuario valido"});
+            else
+                return Created("", result);
         }
 
-        // PUT api/values/5
+        // PUT api/Users/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
             //TODO
         }
 
-        // DELETE api/values/5
+        // DELETE api/Users/5
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

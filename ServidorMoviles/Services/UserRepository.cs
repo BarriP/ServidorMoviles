@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ServidorMoviles.Models;
+using ServidorMoviles.Models.Form;
 
 namespace ServidorMoviles.Services
 {
@@ -17,6 +18,13 @@ namespace ServidorMoviles.Services
         public Usuario GetUsuario(string username, string password) => _context.Usuario.FirstOrDefault(
             u => u.Username.Equals(username) && 
                  u.Password.Equals(password));
+
+        public Usuario NewUsuario(Usuario newUser) => _context.Usuario.Add(newUser).Entity;
+        public Usuario ModifyUser(Usuario modifiedUser)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool DeleteUser(int userId)
         {
             var user = GetUsuario(userId);

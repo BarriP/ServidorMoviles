@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ServidorMoviles.Models;
+using ServidorMoviles.Models.Form;
 
 namespace ServidorMoviles.Services
 {
@@ -11,6 +12,8 @@ namespace ServidorMoviles.Services
         IEnumerable<Usuario> GetUsuarios();
         Usuario GetUsuario(int id);
         Usuario GetUsuario(string username, string password);
+        Usuario NewUsuario(Usuario newUser);
+        Usuario ModifyUser(Usuario modifiedUser);
         bool DeleteUser(int userId);
         void Save();
     }
