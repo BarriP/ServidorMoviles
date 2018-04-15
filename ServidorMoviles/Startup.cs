@@ -64,6 +64,8 @@ namespace ServidorMoviles
 
             app.UseRewriter(option);
 
+            app.UseStaticFiles();
+
             app.UseMvc();
         }
     }
