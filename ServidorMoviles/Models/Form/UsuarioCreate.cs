@@ -10,15 +10,19 @@ namespace ServidorMoviles.Models.Form
     {
         [Required]
         [MinLength(3)]
+        [MaxLength(50)]
         public string Name { get; set; }
         [Required]
         [MinLength(3)]
+        [MaxLength(50)]
         public string Password { get; set; }
         [Required]
         [MinLength(3)]
+        [MaxLength(50)]
         public string Username { get; set; }
         [Required]
         [EmailAddress]
+        [MaxLength(50)]
         public string Mail { get; set; }
     }
 }

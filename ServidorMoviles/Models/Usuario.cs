@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ServidorMoviles.Services;
+using Newtonsoft.Json;
+using ServidorMoviles.Utils;
 
 namespace ServidorMoviles.Models
 {
@@ -16,13 +17,9 @@ namespace ServidorMoviles.Models
         public string Password { get; set; }
         public string Username { get; set; }
         public string Mail { get; set; }
-
-        private string _imageUrl;
-        public string ImageUrl
-        {
-            set => _imageUrl = value;
-            get => $"{ConfigurationManager.Instance.HostUrl}/{_imageUrl}";
-        }
+        [JsonIgnore]
+        public string ImageUrl { get; set; }
+        public string Image => $"{ConfigurationManager.Instance.HostUrl}/{ImageUrl}";
 
         public ICollection<Comentario> Comentario { get; set; }
     }

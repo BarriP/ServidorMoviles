@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic.CompilerServices;
 using ServidorMoviles.Models;
 using ServidorMoviles.Models.Form;
 using ServidorMoviles.Services;
+using ServidorMoviles.Utils;
 
 namespace ServidorMoviles.Controllers
 {
@@ -53,6 +54,7 @@ namespace ServidorMoviles.Controllers
         [HttpPost("")]
         [ProducesResponseType(typeof(Usuario), 201)]
         [ProducesResponseType(typeof(ErrorMsg), 400)]
+        [ProducesResponseType(typeof(ErrorMsg), 409)]
         public IActionResult NewUser([FromBody] UsuarioCreate newUser)
         {
             if (!ModelState.IsValid)
@@ -63,30 +65,63 @@ namespace ServidorMoviles.Controllers
                 Username = newUser.Username,
                 Password = newUser.Password,
                 Mail = newUser.Mail,
-                Name = newUser.Name
+                Name = newUser.Name,
+                ImageUrl = "images/default.jpg"
             };
 
-            var result = _userRepository.NewUsuario(userData);
+            if (_userRepository.UserByUsername(newUser.Username) != null)
+                return StatusCode(StatusCodes.Status409Conflict,
+                    new ErrorMsg($"El usuario [{newUser.Username}] ya existe", ErrorCodesEnum.NameConflict));
 
-            if (result == null)
-                return BadRequest(new { ErrorMsg = "No se ha proporcionado un usuario valido" });
-
-            _userRepository.Save();
-            return Created($"{ConfigurationManager.Instance.HostUrl}/api/Users/{result.Id}", result);
+            try
+            {
+                var result = _userRepository.NewUsuario(userData);
+                _userRepository.Save();
+                return Created($"{ConfigurationManager.Instance.HostUrl}/api/Users/{result.Id}", result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest(new ErrorMsg("No se ha proporcionado un usuario valido", ErrorCodesEnum.BadRequest));
+            }
         }
 
         // PUT api/Users/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [ProducesResponseType(typeof(Usuario), 201)]
+        [ProducesResponseType(typeof(ErrorMsg), 400)]
+        [ProducesResponseType(typeof(ErrorMsg), 404)]
+        public IActionResult UpdateUser(int id, [FromBody] UsuarioCreate newUser)
         {
-            //TODO
+            if (!ModelState.IsValid)
+                return BadRequest(new ErrorMsg("No se ha proporcionado un usuario valido", ErrorCodesEnum.BadRequest));
+
+            var oldUser = _userRepository.GetUsuario(id);
+            if(oldUser == null)
+                return NotFound(new ErrorMsg($"Usuario con id[{id}] no encontrado", ErrorCodesEnum.NotFound));
+
+            oldUser.Mail = newUser.Mail;
+            oldUser.Password = newUser.Password;
+            oldUser.Name = newUser.Name;
+
+            try
+            {
+                _userRepository.ModifyUser(oldUser);
+                _userRepository.Save();
+                return Created($"{ConfigurationManager.Instance.HostUrl}/api/Users/{oldUser.Id}", oldUser);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest(new ErrorMsg("No se ha proporcionado un usuario valido", ErrorCodesEnum.BadRequest));
+            }
         }
 
         // DELETE api/Users/5
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        [ProducesResponseType(typeof(ErrorMsg), 404)]
+        public IActionResult DeleteUser(int id)
         {
             if (_userRepository.DeleteUser(id))
             {
@@ -94,7 +129,57 @@ namespace ServidorMoviles.Controllers
                 return Ok(new { Msg = $"Usuario [{id}] borrado" });
             }
             else
-                return NotFound(new { Msg = $"Usuario [{id}] no se ha encontrado" });
+                return NotFound(new ErrorMsg($"Usuario [{id}] no se ha encontrado", ErrorCodesEnum.NotFound));
+        }
+
+        // PUT api/Users/5/photo
+        [HttpPut("{id}/photo")]
+        [ProducesResponseType(typeof(Usuario), 201)]
+        [ProducesResponseType(typeof(ErrorMsg), 400)]
+        [ProducesResponseType(typeof(ErrorMsg), 404)]
+        public IActionResult UpdateUserPhoto(int id, [FromBody] string base64Photo)
+        {
+            if (String.IsNullOrEmpty(base64Photo))
+                return BadRequest(new ErrorMsg("No se ha proporcionado una foto valida", ErrorCodesEnum.BadRequest));
+
+            var oldUser = _userRepository.GetUsuario(id);
+            if (oldUser == null)
+                return NotFound(new ErrorMsg($"Usuario con id[{id}] no encontrado", ErrorCodesEnum.NotFound));
+
+            try
+            {
+                oldUser.ImageUrl = SaveImage(base64Photo);
+                _userRepository.ModifyUser(oldUser);
+                _userRepository.Save();
+                return Created($"{ConfigurationManager.Instance.HostUrl}/api/Users/{oldUser.Id}", oldUser);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest(new ErrorMsg("No se ha proporcionado una foto valida", ErrorCodesEnum.BadRequest));
+            }
+        }
+
+        private string SaveImage(string base64Image)
+        {
+            var fileRoute = $"wwwroot/images/{Guid.NewGuid().ToString()}";
+
+            byte[] imageBytes = Convert.FromBase64String(base64Image);
+
+            string extension = DetermineExtension(imageBytes.Take(8));
+
+            fileRoute += "." + extension; 
+
+            System.IO.File.WriteAllBytes(fileRoute, imageBytes);
+
+            return fileRoute;
+        }
+
+        ///<seealso cref="https://www.brainyquote.com/quotes/edsger_dijkstra_204329"/> 
+        private string DetermineExtension(IEnumerable<byte> array)
+        {
+            //Esto con OOP es una gochada
+            return "";
         }
     }
 }

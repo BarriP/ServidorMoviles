@@ -25,6 +25,6 @@ namespace ServidorMoviles.Models.Form
 
     public enum ErrorCodesEnum
     {
-        NotFound, BadRequest
+        NotFound, BadRequest, NameConflict
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ServidorMoviles.Models;
 using ServidorMoviles.Models.Form;
 
@@ -22,7 +23,8 @@ namespace ServidorMoviles.Services
         public Usuario NewUsuario(Usuario newUser) => _context.Usuario.Add(newUser).Entity;
         public Usuario ModifyUser(Usuario modifiedUser)
         {
-            throw new NotImplementedException();
+            _context.Entry(modifiedUser).State = EntityState.Modified;
+            return modifiedUser;
         }
 
         public bool DeleteUser(int userId)
@@ -33,6 +35,10 @@ namespace ServidorMoviles.Services
             _context.Usuario.Remove(user);
             return true;
         }
+
+        public Usuario UserByUsername(string username) =>
+            _context.Usuario.FirstOrDefault(u => u.Username.Equals(username));
+
         public void Save() => _context.SaveChanges();
 
         #region Dispose

@@ -15,6 +15,7 @@ namespace ServidorMoviles.Services
         Usuario NewUsuario(Usuario newUser);
         Usuario ModifyUser(Usuario modifiedUser);
         bool DeleteUser(int userId);
+        Usuario UserByUsername(string username);
         void Save();
     }
 }
