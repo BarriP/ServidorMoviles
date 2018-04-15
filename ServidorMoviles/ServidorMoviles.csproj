@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="4.3.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="2.4.0" />
   </ItemGroup>
@@ -24,8 +25,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="lib\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="magic">
+		<HintPath>magic.dll</HintPath>
+		<SpecificVersion>False</SpecificVersion> 
+		<!-- You may set it to true if your dll has a specific version -->
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="magic.dll">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 
 </Project>

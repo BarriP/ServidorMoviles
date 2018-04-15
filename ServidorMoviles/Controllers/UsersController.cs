@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FSharp.Collections;
 using Microsoft.VisualBasic.CompilerServices;
 using ServidorMoviles.Models;
 using ServidorMoviles.Models.Form;
@@ -148,7 +149,7 @@ namespace ServidorMoviles.Controllers
 
             try
             {
-                oldUser.ImageUrl = SaveImage(base64Photo);
+                oldUser.ImageUrl = SaveImage(base64Photo).Substring(8);
                 _userRepository.ModifyUser(oldUser);
                 _userRepository.Save();
                 return Created($"{ConfigurationManager.Instance.HostUrl}/api/Users/{oldUser.Id}", oldUser);
@@ -166,7 +167,7 @@ namespace ServidorMoviles.Controllers
 
             byte[] imageBytes = Convert.FromBase64String(base64Image);
 
-            string extension = DetermineExtension(imageBytes.Take(8));
+            string extension = DetermineExtension(imageBytes.Take(8).Select(x => (int)x));
 
             fileRoute += "." + extension; 
 
@@ -176,10 +177,12 @@ namespace ServidorMoviles.Controllers
         }
 
         ///<seealso cref="https://www.brainyquote.com/quotes/edsger_dijkstra_204329"/> 
-        private string DetermineExtension(IEnumerable<byte> array)
+        private string DetermineExtension(IEnumerable<int> array)
         {
+            var listtest = array.ToArray();
             //Esto con OOP es una gochada
-            return "";
+            var list = ListModule.OfSeq(listtest);
+            return Magic.ImageUtils.checkMagicNumbers(list);
         }
     }
 }
