@@ -126,8 +126,7 @@ namespace ServidorMoviles.Models
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("id");
 
                 entity.Property(e => e.ImageUrl).HasColumnName("imageUrl");
 

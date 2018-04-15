@@ -21,6 +21,7 @@ namespace ServidorMoviles
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            ConfigurationManager.Instance.HostUrl = Configuration["LocalAddress"];
         }
 
         public IConfiguration Configuration { get; }
@@ -40,6 +41,7 @@ namespace ServidorMoviles
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "DTapeo API", Version = "v1" });
+                c.DescribeAllEnumsAsStrings();
             });
         }
 

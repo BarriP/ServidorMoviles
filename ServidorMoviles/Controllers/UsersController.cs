@@ -25,7 +25,7 @@ namespace ServidorMoviles.Controllers
 
         // GET api/Users/5
         [ProducesResponseType(typeof(Usuario), 200)]
-        [ProducesResponseType(typeof(Usuario), 404)]
+        [ProducesResponseType(typeof(ErrorMsg), 404)]
         [HttpGet("{id}")]
         public IActionResult GetUser(int id)
         {
@@ -33,17 +33,30 @@ namespace ServidorMoviles.Controllers
             if (user != null)
                 return Ok(user);
             else
-                return NotFound(new {Msg = $"Usuario con id[{id}] no encontrado"});
+                return NotFound(new ErrorMsg($"Usuario con id[{id}] no encontrado",ErrorCodesEnum.NotFound));
+        }
+
+        // POST api/Users/login
+        [HttpPost("login")]
+        [ProducesResponseType(typeof(Usuario), 200)]
+        [ProducesResponseType(typeof(ErrorMsg), 404)]
+        public IActionResult Login(string username, string password)
+        {
+            var user = _userRepository.GetUsuario(username, password);
+            if (user != null)
+                return Ok(user);
+            else
+                return NotFound(new ErrorMsg("Datos de login erroneos",ErrorCodesEnum.NotFound));
         }
 
         // POST api/Users
         [HttpPost("")]
         [ProducesResponseType(typeof(Usuario), 201)]
-        [ProducesResponseType(typeof(Usuario), 400)]
+        [ProducesResponseType(typeof(ErrorMsg), 400)]
         public IActionResult NewUser([FromBody] UsuarioCreate newUser)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new { ErrorMsg = "No se ha proporcionado un usuario valido" });
+                return BadRequest(new ErrorMsg("No se ha proporcionado un usuario valido", ErrorCodesEnum.BadRequest));
 
             var userData = new Usuario
             {
@@ -56,9 +69,10 @@ namespace ServidorMoviles.Controllers
             var result = _userRepository.NewUsuario(userData);
 
             if (result == null)
-                return BadRequest(new {ErrorMsg = "No se ha proporcionado un usuario valido"});
-            else
-                return Created("", result);
+                return BadRequest(new { ErrorMsg = "No se ha proporcionado un usuario valido" });
+
+            _userRepository.Save();
+            return Created($"{ConfigurationManager.Instance.HostUrl}/api/Users/{result.Id}", result);
         }
 
         // PUT api/Users/5
@@ -77,22 +91,10 @@ namespace ServidorMoviles.Controllers
             if (_userRepository.DeleteUser(id))
             {
                 _userRepository.Save();
-                return Ok(new {Msg = $"Usuario [{id}] borrado"});
+                return Ok(new { Msg = $"Usuario [{id}] borrado" });
             }
             else
-                return NotFound(new {Msg = $"Usuario [{id}] no se ha encontrado"});
-        }
-
-        [HttpPost("login")]
-        [ProducesResponseType(typeof(Usuario), 200)]
-        [ProducesResponseType(typeof(Usuario), 404)]
-        public IActionResult Login(string username, string password)
-        {
-            var user = _userRepository.GetUsuario(username, password);
-            if (user != null)
-                return Ok(user);
-            else
-                return NotFound(new {Msg = $"Usuario con username[{username}] no encontrado"});
+                return NotFound(new { Msg = $"Usuario [{id}] no se ha encontrado" });
         }
     }
 }
