@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ServidorMoviles.Models;
+using ServidorMoviles.Models.Form;
+using ServidorMoviles.Services;
 
 namespace ServidorMoviles.Controllers
 {
@@ -10,36 +13,26 @@ namespace ServidorMoviles.Controllers
     [Route("api/[controller]")]
     public class TapasController : Controller
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private readonly ITapasRepository _tapasRepository;
 
-        // GET api/<controller>/5
+        public TapasController(ITapasRepository repo) => _tapasRepository = repo;
+
+        // GET api/Tapaes
+        [ProducesResponseType(typeof(IEnumerable<Tapa>), 200)]
+        [HttpGet("")]
+        public IActionResult GetAllTapaes() => Ok(_tapasRepository.GetTapas());
+
+        // GET api/Tapaes/5
+        [ProducesResponseType(typeof(Tapa), 200)]
+        [ProducesResponseType(typeof(ErrorMsg), 404)]
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult GetTapa(int id)
         {
-            return "value";
-        }
-
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var tapa = _tapasRepository.GetTapa(id);
+            if (tapa != null)
+                return Ok(tapa);
+            else
+                return NotFound(new ErrorMsg($"Tapa con id[{id}] no encontrado", ErrorCodesEnum.NotFound));
         }
     }
 }

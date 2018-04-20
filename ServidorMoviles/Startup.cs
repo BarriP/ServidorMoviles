@@ -37,6 +37,8 @@ namespace ServidorMoviles
 
             // Services
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IBaresRepository, BaresRepository>();
+            services.AddTransient<ITapasRepository, TapasRepository>();
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

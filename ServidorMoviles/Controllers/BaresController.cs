@@ -3,44 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ServidorMoviles.Models;
+using ServidorMoviles.Models.Form;
+using ServidorMoviles.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ServidorMoviles.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class BaresController : Controller
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private readonly IBaresRepository _baresRepository;
 
-        // GET api/<controller>/5
+        public BaresController(IBaresRepository repo) => _baresRepository = repo;
+
+        // GET api/Bares
+        [ProducesResponseType(typeof(IEnumerable<Bar>), 200)]
+        [HttpGet("")]
+        public IActionResult GetAllBares() => Ok(_baresRepository.GetBares());
+
+        // GET api/Bares/5
+        [ProducesResponseType(typeof(Bar), 200)]
+        [ProducesResponseType(typeof(ErrorMsg), 404)]
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult GetBar(int id)
         {
-            return "value";
-        }
-
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var bar = _baresRepository.GetBar(id);
+            if (bar != null)
+                return Ok(bar);
+            else
+                return NotFound(new ErrorMsg($"Bar con id[{id}] no encontrado", ErrorCodesEnum.NotFound));
         }
     }
 }
