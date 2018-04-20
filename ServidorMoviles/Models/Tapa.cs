@@ -25,6 +25,7 @@ namespace ServidorMoviles.Models
         public string PhotoUrl { get; set; }
         public string Image => $"{ConfigurationManager.Instance.HostUrl}/{PhotoUrl}";
 
+        [JsonIgnore]
         public Bar Bar { get; set; }
         public ICollection<ComentarioTapa> ComentarioTapa { get; set; }
         public ICollection<TapasRuta> TapasRuta { get; set; }
