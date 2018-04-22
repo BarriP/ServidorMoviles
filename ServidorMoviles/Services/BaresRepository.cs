@@ -40,7 +40,7 @@ namespace ServidorMoviles.Services
         public IEnumerable<Bar> GetDestacados()
         {
             Random r = new Random();
-            return _context.Bar.ToList().OrderBy(x => r.Next()).Take(3);
+            return _context.Bar.Include(u => u.Tapa).ToList().OrderBy(x => r.Next()).Take(3);
         }
 
         #region Dispose
