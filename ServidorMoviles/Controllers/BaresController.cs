@@ -36,5 +36,10 @@ namespace ServidorMoviles.Controllers
             else
                 return NotFound(new ErrorMsg($"Bar con id[{id}] no encontrado", ErrorCodesEnum.NotFound));
         }
+
+        //GET api/Bares/destacados
+        [ProducesResponseType(typeof(IEnumerable<Bar>), 200)]
+        [HttpGet("destacados")]
+        public IActionResult GetDestacados() => Ok(_baresRepository.GetDestacados());
     }
 }

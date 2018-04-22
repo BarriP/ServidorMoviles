@@ -36,6 +36,13 @@ namespace ServidorMoviles.Services
 
         public void Save() => _context.SaveChanges();
 
+        // Simplemente un random y sacamos 3
+        public IEnumerable<Bar> GetDestacados()
+        {
+            Random r = new Random();
+            return _context.Bar.ToList().OrderBy(x => r.Next()).Take(3);
+        }
+
         #region Dispose
         private bool _disposed = false;
 

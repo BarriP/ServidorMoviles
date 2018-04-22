@@ -14,5 +14,6 @@ namespace ServidorMoviles.Services
         Bar ModifyBar(Bar modifiedBar);
         bool DeleteBar(int barId);
         void Save();
+        IEnumerable<Bar> GetDestacados();
     }
 }
