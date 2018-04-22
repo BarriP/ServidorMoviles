@@ -12,9 +12,9 @@ namespace ServidorMoviles.Services
         private readonly DataContext _context;
         public BaresRepository(DataContext ctx) => _context = ctx;
 
-        public IEnumerable<Bar> GetBares() => _context.Bar.ToList();
+        public IEnumerable<Bar> GetBares() => _context.Bar.Include(u => u.Tapa).ToList();
 
-        public Bar GetBar(int id) => _context.Bar.FirstOrDefault(
+        public Bar GetBar(int id) => _context.Bar.Include(u => u.Tapa).FirstOrDefault(
             b => b.Id == id);
 
         public Bar NewBar(Bar newBar) => _context.Bar.Add(newBar).Entity;
