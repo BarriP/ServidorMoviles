@@ -7,12 +7,6 @@ namespace ServidorMoviles.Models
 {
     public partial class Tapa
     {
-        public Tapa()
-        {
-            ComentarioTapa = new HashSet<ComentarioTapa>();
-            TapasRuta = new HashSet<TapasRuta>();
-        }
-
         public long Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
@@ -27,7 +21,5 @@ namespace ServidorMoviles.Models
 
         [JsonIgnore]
         public Bar Bar { get; set; }
-        public ICollection<ComentarioTapa> ComentarioTapa { get; set; }
-        public ICollection<TapasRuta> TapasRuta { get; set; }
     }
 }

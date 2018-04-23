@@ -9,7 +9,6 @@ namespace ServidorMoviles.Models
     {
         public Bar()
         {
-            ComentarioBar = new HashSet<ComentarioBar>();
             Tapa = new HashSet<Tapa>();
         }
 
@@ -25,7 +24,6 @@ namespace ServidorMoviles.Models
         public string PhotoUrl { get; set; }
         public string Image => $"{ConfigurationManager.Instance.HostUrl}/{PhotoUrl}";
 
-        public ICollection<ComentarioBar> ComentarioBar { get; set; }
         public ICollection<Tapa> Tapa { get; set; }
     }
 }
